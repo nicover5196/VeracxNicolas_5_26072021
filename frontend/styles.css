@@ -1,0 +1,50 @@
+/* Général */
+
+body {
+    margin: 0px;
+    padding: 0px;
+}
+
+
+/* Header */
+
+.container {
+    background-color: burlywood;
+    box-shadow: 0 0 20px black;
+}
+
+.logo {
+    margin-top: 4px;
+    margin-left: 4px;
+    width: 200px;
+    height: 100px;
+}
+
+
+/* Section */
+
+.titre {
+    text-align: center;
+}
+
+
+/* Footer */
+
+footer {
+    background-color: #353535;
+    position: absolute;
+    bottom: 0px;
+    right: 0;
+    left: 0;
+}
+
+ul {
+    list-style-type: none;
+    display: flex;
+    justify-content: space-around;
+}
+
+a {
+    color: white;
+    text-decoration: none;
+}
