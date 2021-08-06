@@ -27,6 +27,40 @@ body {
     text-align: center;
 }
 
+h1 {
+    font-size: 26px;
+}
+
+h2 {
+    background-color: #353535;
+    padding: 20px;
+    color: white;
+    opacity: 0.8;
+    box-shadow: 0 0 20px #353535;
+}
+
+.section_products {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px;
+}
+
+article {
+    margin: 10px;
+    border: solid black 1px;
+    box-shadow: 0 0 5px black;
+    width: 350px;
+    text-align: center;
+}
+
+.teddy {
+    border-bottom: solid black 1px;
+}
+
+.color {
+    cursor: pointer;
+}
+
 
 /* Footer */
 
@@ -45,6 +79,6 @@ ul {
 }
 
 a {
-    color: white;
+    color: black;
     text-decoration: none;
 }
