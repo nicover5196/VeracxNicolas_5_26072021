@@ -4,14 +4,23 @@ alert("page produit")
 
 const urlId = window.location.search;
 
+// Récuperer l'url 
+
+const monUrl = window.location.href;
+
 // Affichage dans la console 
-console.log(urlId)
-
-// Récupérer la valeur du paramètre
-
-const urlParams = new URLSearchParams(urlId);
+console.log(urlId);
+console.log(monUrl);
 
 // Faire un fetch pour recuperer les infos de mon produit
+
+// Création d'une variable pour récuperer l'url API
+const url = "http://localhost:3000/api/teddies";
+
+// Récupération des données avec Fetch
+
+
+
 
 
 
