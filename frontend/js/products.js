@@ -10,13 +10,13 @@ fetch(url)
                 // Afficher mes données sur ma page index 
             let affichage = "";
             for (let donnees of data) {
-                affichage += `<a id="test" href="product.html?id=${donnees._id}">`;
+                affichage += `<a href="product.html?id=${donnees._id}">`;
                 affichage += '<article>';
-                affichage += `<img class="teddy" src="${donnees.imageUrl}"width=350 height=200>`;
+                affichage += `<img class="teddy" src="${donnees.imageUrl}" alt="ours en peluche" width=350 height=200>`;
                 affichage += `<h3>${donnees.name}</h3>`;
                 affichage += `<p>Description : ${donnees.description}</p>`;
                 affichage += `<p class="color">Choix couleurs : ${donnees.colors}</p>`;
-                affichage += `<span>Prix : ${donnees.price}€</span>`;
+                affichage += `<span>Prix : ${donnees.price/100} €</span>`;
                 affichage += '</article>';
                 affichage += '</a>';
             }
