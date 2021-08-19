@@ -1,24 +1,12 @@
-// alert("page produit")
-
 // Récuperer l'id qui a été passée en parametre de mon url
-
 const urlId = window.location.search;
 
 // Récuperer l'url 
-
 const monUrl = window.location.href;
 
 // Extraction de l'id 
-
 const urlSearchParams = new URLSearchParams(urlId);
 const id = urlSearchParams.get("id")
-
-// Affichage dans la console 
-// console.log(urlId);
-// console.log(monUrl);
-// console.log(urlSearchParams)
-// console.log(id);
-
 
 // Selection de la classe pour injecter l'html
 const affichageArticle = document.querySelector(".product");
@@ -54,7 +42,6 @@ fetch(url)
             `;
         }
 
-
         affichageArticle.innerHTML = structureArticle;
 
         const optionColor = document.querySelector("#option_produit");
@@ -62,16 +49,25 @@ fetch(url)
 
         // Récupérer mon article dans mon panier
         const idForm = document.querySelector("#option_produit");
-        // console.log(idForm);
 
         // Selection du bouton ajouter l'article
         const btnSubmit = document.querySelector("#btn");
-        // console.log(btnSubmit);
 
         // Ecouter le bouton
         btnSubmit.addEventListener("click", (event) => {
             event.preventDefault();
 
+            // Regarder se que contient mon Local Storage
+            let registerProductStorage = JSON.parse(localStorage.getItem("panier"));
+
+            if (registerProductStorage === null) {
+                // si le local storage est vide
+            } else {
+                // le local Storage a des produits, si le produit que je met dans mon panier est dans le local storage, alors je change la quantite du produit et ne rajoute pas new product
+                registerProductStorage.forEach((element) => {
+                    if (element.id === id) element.quantite++
+                });
+            }
             // Choix de l'option dans une variable
             const choixForm = idForm.value;
             // console.log(choixForm);
@@ -88,22 +84,25 @@ fetch(url)
                 }
                 // Fonction pour répétition
             const addLocalStorage = () => {
-                    registerProductStorage.push(optionsProduit);
-                    localStorage.setItem("panier", JSON.stringify(registerProductStorage));
-                }
-                // Ajout de mon article dans le localStorage
-            let registerProductStorage = JSON.parse(localStorage.getItem("panier"));
-            // console.log(registerProductStorage);
+                registerProductStorage.push(optionsProduit);
+                localStorage.setItem("panier", JSON.stringify(registerProductStorage));
+            }
+
+            // Ajout de mon article dans le localStorage
+
             const messageValide = document.querySelector(".msg");
 
             if (registerProductStorage) {
                 addLocalStorage();
-                messageValide.innerHTML = `Votre article a été ajouter au <strong><a class="lienPanier" href="panier.html">panier</a>`;
+                messageValide.innerHTML = `Votre article a été ajouter au <strong><a class="lienPanier" href="panier.html">panier</a></strong>
+                </br><p class="msgBlack">Retournez sur la page <strong><a class="lienAccueil" href="index.html">d'accueil ?</a></strong></p>`;
             } else {
                 registerProductStorage = [];
                 addLocalStorage();
-                messageValide.innerHTML = `Votre article a été ajouter au <strong><a class="lienPanier" href="panier.html">panier</a>`;
+                messageValide.innerHTML = `Votre article a été ajouter au <strong><a class="lienPanier" href="panier.html">panier</a></strong>
+                </br><p class="msgBlack">Retournez sur la page <strong><a class="lienAccueil" href="index.html">d'accueil ?</a></strong></p>`;
                 // console.log(registerProductStorage);
+
             }
         });
     })

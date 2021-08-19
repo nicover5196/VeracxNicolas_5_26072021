@@ -6,8 +6,8 @@ fetch(url)
     .then(resultat => resultat.json()
         .then(data => {
             // Afficher mes données dans la console
-            console.log(data)
-                // Afficher mes données sur ma page index 
+            // console.log(data)
+            // Afficher mes données sur ma page index 
             let affichage = "";
             for (let donnees of data) {
                 affichage += `<a href="product.html?id=${donnees._id}">`;
