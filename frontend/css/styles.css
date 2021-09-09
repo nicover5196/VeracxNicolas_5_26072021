@@ -94,9 +94,8 @@
         background-color: #353535;
         padding: 10px;
         position: absolute;
-        bottom: 0px;
-        left: 0px;
-        right: 0px;
+        bottom: 0;
+        width: 100%;
     }
     
     ul {
@@ -142,6 +141,10 @@
     .resetLePanier {
         text-align: center;
     }
+    
+    .continueBuy {
+        text-align: center;
+    }
     /* Formulaire Validation Panier */
     
     .formPanier {
@@ -161,4 +164,38 @@
     
     #envoyerFormulaire {
         margin-top: 12px;
+    }
+    /* Commande valide */
+    
+    .commandeValide {
+        text-align: center;
+        margin: auto;
+        font-weight: bold;
+        text-decoration: none;
+        color: green;
+    }
+    
+    .lien_commande {
+        color: blue;
+    }
+    /* Affichage commande page commande  */
+    
+    .cordonnee {
+        margin-left: 40px;
+    }
+    
+    .donneeForm {
+        display: flex;
+        flex-direction: column;
+        border: solid black 1px;
+        align-items: center;
+    }
+    
+    .afficheCommande {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .prixTotal {
+        text-align: center;
     }

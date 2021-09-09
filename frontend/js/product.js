@@ -1,110 +1,87 @@
-/* Affichage de mon produit par son ID */
-// Récuperer l'id qui a été passée en parametre de mon url
-const urlId = window.location.search;
-
-// Récuperer l'url 
-const monUrl = window.location.href;
-
-// Extraction de l'id 
-const urlSearchParams = new URLSearchParams(urlId);
-const id = urlSearchParams.get("id")
-
-// Selection de la classe pour injecter l'html
+const currentLocation = window.location.search;
+const URLparams = new URLSearchParams(currentLocation);
+const currentProductId = URLparams.get('id');
 const affichageArticle = document.querySelector(".product");
 
-// Faire un fetch pour recuperer les infos de mon produit
-const url = `http://localhost:3000/api/teddies/${id}`;
-fetch(url)
-    .then(function(data) {
-        return data.json()
-    })
-    .then(function(product) {
-        const structureArticle = `
+
+const teddiesRoute = `http://localhost:3000/api/teddies/${currentProductId}`;
+
+
+function displayProduct(product) {
+    const structureArticle = `
             <article class="article_alone">
                 <img class="teddy" src="${product.imageUrl}" alt="ours en peluche" width=350 height=200>
                 <h3>${product.name}</h3>
                 <p>Description :${product.description} </p>
-                <span>Prix :${product.price/100} €</span>
+                <span>Prix :${product.price / 100} €</span>
                 <form>
                     <label for="option_produit">Choisir l'option :</label>
                     <select id="option_produit" name="option_produit"></select>
                 </form>
                 <button id="btn" type="submit" name="btn-envoyer">Ajouter au panier</button>
+            </article>`;
 
-            </article> 
-                        `;
-
-        // Choix des options de couleur de mon article (boucle)
-        // ma variable qui contient les couleurs de mon produit
-        const choixCouleurs = product.colors
-            // console.log(choixCouleurs)
-        let stuctureOptions = [];
-        for (let i = 0; i < choixCouleurs.length; i++) {
-            stuctureOptions = stuctureOptions +
-                `
-            <option value="${i+1}">${choixCouleurs[i]}</option>
-            `;
-            // console.log(stuctureOptions)
-        }
-        // Afficher ma structure dans ma variable qui contient l'element de ma classe html
-        affichageArticle.innerHTML = structureArticle;
-        // Selection de la classe pour l'ajouter dans ma variable
-        const optionColor = document.querySelector("#option_produit");
-        // Afficher dans un tableau ma boucle qui numérote & qui contient les couleurs de mon produit
-        optionColor.innerHTML = stuctureOptions;
-        // Récupérer mon article dans mon panier
-        // récupere l 'id de mon selecteur dans mon html dynamique située dans ma structure article
-        const idForm = document.querySelector("#option_produit");
-        // console.log(idForm)
-        // récupere le bouton ajouter l'article
-        const btnSubmit = document.querySelector("#btn");
-
-        // Ecouter le boutton au click de souris (event prevent permet d'annuler tout comportement autre)
-        btnSubmit.addEventListener("click", (event) => {
-            event.preventDefault();
-
-            // Regarder se que contient mon Local Storage
-            let registerProductStorage = JSON.parse(localStorage.getItem("panier"));
-
-            // récupère la valeur de ma variable idform
-            const choixForm = idForm.value;
-            // variable qui récupérer les données de mon produit ( id, img, ...)
-            let optionsProduit = {
-                    id: id,
-                    imageUrl: product.imageUrl,
-                    Name: product.name,
-                    description: product.description,
-                    choixCouleurs: choixForm,
-                    quantite: 1,
-                    price: product.price / 100
-                }
-                // création d'une fonction qui envoie ma variable options ( données) dans le local storage, puis qui les modifie
-            const addLocalStorage = () => {
-                registerProductStorage.push(optionsProduit);
-                localStorage.setItem("panier", JSON.stringify(registerProductStorage));
-            }
-            const messageValide = document.querySelector(".msg");
-
-            if (registerProductStorage === null) {
-                registerProductStorage = [];
-                addLocalStorage();
-                // ajout du message dans ma variable qui contient la classe
-                messageValide.innerHTML = `Votre article a été ajouter au <strong><a class="lienPanier" href="panier.html">panier</a></strong>
-                </br><p class="msgBlack">Retournez sur la page <strong><a class="lienAccueil" href="index.html">d'accueil ?</a></strong></p>`;
-                console.log("article ajouté si le local contient rien")
-                    // SI condition EST STRICTEMENT EGALE A null (si il y a des articles car ce n'est pas null)== afficher dans ma console 
-            } else {
-                // SINON condition (mon panier n'est pas vide) récupere l'article ajouter, vérifie si l'id et = au même id, si oui, modifié la quantité
-                registerProductStorage.forEach((element) => {
-                    if (element.choixCouleurs === choixForm && element.id === id) element.quantite++
-                        localStorage.setItem("panier", JSON.stringify(registerProductStorage))
-                });
-                messageValide.innerHTML = `Votre article a été ajouter au <strong><a class="lienPanier" href="panier.html">panier</a></strong>
-                </br><p class="msgBlack">Retournez sur la page <strong><a class="lienAccueil" href="index.html">d'accueil ?</a></strong></p>`;
-                console.log("article ajouté si le local contient le même article avec le même choix couleurs & id ")
-            }
-        })
-    })
-    .catch(function(err) {
-
+    affichageArticle.innerHTML = structureArticle;
+    const colorOptions = product.colors;
+    const selectColor = document.querySelector('#option_produit');
+    colorOptions.forEach((value, index) => {
+        selectColor.innerHTML += `<option value="${index}">${value}</option>`;
     });
+}
+
+function addProduct(product) {
+    const localStorageContent = JSON.parse(localStorage.getItem("panier"));
+    if (localStorageContent === null) {
+        // alert('le localstorage est vide');
+        let productsList = [];
+        productsList.push(product);
+        localStorage.setItem("panier", JSON.stringify(productsList));
+    } else {
+        // alert('localstorage pas vide')
+        //je fais une boucle autour des éléments de mon localStorageContent
+        // si un de mes éléments a pour id l'id de mon produit
+        // alors pour cet élément je lui incrémente sa quantité
+        // et je mets à jour mon localStorage puis avec le return j'arrête ma boucle
+        for (let i = 0; i < localStorageContent.length; i++) {
+            if (localStorageContent[i].id === product.id) {
+                // alert('produit deja existant');
+                localStorageContent[i].quantity++;
+                localStorage.setItem("panier", JSON.stringify(localStorageContent));
+                return;
+            }
+        }
+        // alert("le produit n'est pas dans le local storage");
+        localStorageContent.push(product);
+        localStorage.setItem("panier", JSON.stringify(localStorageContent));
+    }
+}
+
+const messageValide = document.querySelector(".msg");
+
+fetch(teddiesRoute)
+    .then(data => data.json())
+    .then((product) => {
+        //Send product to HTML
+        displayProduct(product);
+
+        // Create formated product for localstorage
+        const cartProduct = {
+            id: product._id,
+            imageUrl: product.imageUrl,
+            name: product.name,
+            description: product.description,
+            quantity: 1,
+            price: product.price / 100
+        }
+
+        // When adding product to cart
+        const addProductButton = document.querySelector("#btn");
+        addProductButton.addEventListener('click', function() {
+            addProduct(cartProduct);
+            messageValide.innerHTML = `Votre article a été ajouter au <strong><a class="lienPanier" href="panier.html">panier</a></strong>
+            </br><p class="msgBlack">Retournez sur la page <strong><a class="lienAccueil" href="index.html">d'accueil ?</a></strong></p>`;
+        });
+    })
+    .catch((e) => {
+        console.log(e);
+    })

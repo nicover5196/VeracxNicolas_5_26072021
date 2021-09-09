@@ -1,6 +1,6 @@
 // création d'une variable qui récupére les données de mon localstorage sur la key panier
-let registerProductStorage = JSON.parse(localStorage.getItem("panier"));
-// console.log(registerProductStorage);
+let localStorageContent = JSON.parse(localStorage.getItem("panier"));
+// console.log(localStorageContent);
 
 // Injection du code html dans la classe panier sur mon html
 const affichagePanier = document.querySelector(".panier");
@@ -8,7 +8,7 @@ const affichagePanier = document.querySelector(".panier");
 
 
 // SI condition (localstorage) est vide alors afficher ma constante qui contient un msg dans ma variable qui contient ma classe panier
-if (registerProductStorage === null) {
+if (localStorageContent === null) {
     const emptyPanier = `
     <div class="emptyPanier">
     <p>Votre panier est vide ! Rendez-vous sur notre page <strong><a href="index.html">d'accueil !</a></strong></p>
@@ -19,18 +19,17 @@ if (registerProductStorage === null) {
 } else {
     let productPanier = [];
     // création d'une boucle k qui numerote le contenu de mon localstorage
-    for (k = 0; k < registerProductStorage.length; k++) {
+    for (k = 0; k < localStorageContent.length; k++) {
 
         // console.log(registerProductStorage.length);
         // création d'une variable qui est égale à mon tableau + le contenu de mon localstorage et l'affiche de maniere dynamique
         productPanier = productPanier + `
         <section class="sectionPanier">
         <article id="${k}">
-            <img class="teddy" src="${registerProductStorage[k].imageUrl}" alt="ours en peluche" width=100 height=50>
-            <h3>${registerProductStorage[k].Name}</h3>
-            <p>Quantité :${registerProductStorage[k].quantite}</p>
-            <p>Options couleurs : ${registerProductStorage[k].choixCouleurs}</br>
-            <span>Prix :${registerProductStorage[k].price} €</span></br>
+            <img class="teddy" src="${localStorageContent[k].imageUrl}" alt="ours en peluche" width=100 height=50>
+            <h3>${localStorageContent[k].name}</h3>
+            <p>Quantité :${localStorageContent[k].quantity}</p>
+            <span>Prix :${localStorageContent[k].price} €</span></br>
             <button class="btn-delete"> Retirer l'article </button>
         </article>
         </section>
@@ -38,7 +37,7 @@ if (registerProductStorage === null) {
         // console.log(k)
     }
     // SI k est égale aux  nombre de données du pannier, alors afficher dans ma variable qui contient la classe html 
-    if (k == registerProductStorage.length) {
+    if (k == localStorageContent.length) {
         affichagePanier.innerHTML = productPanier;
         // console.log(registerProductStorage.length)
     }
@@ -50,14 +49,14 @@ for (let j = 0; j < removeProduct.length; j++) {
     removeProduct[j].addEventListener("click", (event) => {
         event.preventDefault();
         // console.log(event);
-        let removeIdProduct = registerProductStorage[j].id;
+        let removeIdProduct = localStorageContent[j].id;
         // console.log("id");
         // console.log(removeIdProduct);
-        registerProductStorage = registerProductStorage.filter(el => el.id !== removeIdProduct);
+        localStorageContent = localStorageContent.filter(el => el.id !== removeIdProduct);
         // console.log(registerProductStorage);
 
         localStorage.setItem(
-            "panier", JSON.stringify(registerProductStorage));
+            "panier", JSON.stringify(localStorageContent));
         document.location.reload();
     })
 }
@@ -134,14 +133,146 @@ btnFormulaire.addEventListener("click", (e) => {
         email: document.querySelector("#email").value,
     }
 
-    // Mettre l'objet dans le localStorage & le convertit en chaîne JSON
+    // Gestion du formulaire 
+    const textAlert = (value) => {
+        return `${value} : Les chiffres et symboles ne sont pas autorisé. \n Ne pas dépasser 20 caractères, minimum 3 caractères.`;
+    }
 
-    localStorage.setItem("formValue", JSON.stringify(formValue));
+    const regExPrenomNomVille = (value) => {
+        return /^[A-Za-z]{3,20}$/.test(value)
+    }
+    const regExCodePostal = (value) => {
+        return /^[0-9]{5}$/.test(value)
+    }
+    const regExEmail = (value) => {
+        return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value)
+    }
+    const regExAdresse = (value) => {
+        return /^[A-Za-z0-9\s]{5,50}$/.test(value);
+    }
+
+    function prenomControle() {
+        // Contrôle du champ prénom
+        const LePrenom = formValue.prenom;
+        if (regExPrenomNomVille(LePrenom)) {
+            // console.log("ok")
+            return true;
+        } else {
+            // console.log("ko")
+            alert(textAlert("Prénom"));
+            return false;
+        }
+    }
+
+    function nomControle() {
+        // Contrôle du champ nom
+        const leNom = formValue.nom;
+        if (regExPrenomNomVille(leNom)) {
+            // console.log("ok")
+            return true;
+        } else {
+            // console.log("ko")
+            alert(textAlert("Nom"));
+            return false;
+        }
+    }
+    // inversement du if & else, suppression des return
+    function villeControle() {
+        // Contrôle du champ ville
+        const laVille = formValue.ville;
+        if (regExPrenomNomVille(laVille)) {
+            // console.log("ok")
+            return true;
+        } else {
+            // console.log("ko")
+            alert(textAlert("Ville"));
+            return false;
+        }
+    }
+
+
+    function codePostalControle() {
+        // Contrôle du champ code postal
+        const codePostal = formValue.codePostal;
+        if (regExCodePostal(codePostal)) {
+            // console.log("ok")
+            return true;
+        } else {
+            // console.log("ko")
+            alert("Veuillez remplir le code postal à 5 chiffres.");
+            return false;
+        }
+    }
+
+    function emailControle() {
+        // Contrôle du champ email
+        const leEmail = formValue.email;
+        if (regExEmail(leEmail)) {
+            // console.log("ok")
+            return true;
+        } else {
+            // console.log("ko")
+            alert("L'email n'est pas valide.");
+            return false;
+        }
+    }
+
+    function adresseControle() {
+        const leAdresse = formValue.adresse;
+        if (regExAdresse(leAdresse)) {
+            return true;
+        } else {
+            alert("L'adresse ne doit contenir que des chiffres et lettres sans accent et symbole.");
+            return false;
+        }
+    }
+    // récupérer les données formulaire & articles dans le panier
+    const numeroCommande = [];
+    numeroCommande.push(localStorageContent)
+    numeroCommande.push(localStorage)
+    console.log(numeroCommande);
+
+    const random = (max, min) => {
+        return Math.floor(Math.random() * (max - min + 1) + min);
+    }
+    numeroCommande.innerHTML = random(10000000, 90000000);
+    // Contrôle validité formulaire avant envoie dans le LocalStorage
+    if (localStorageContent && prenomControle() && nomControle() && codePostalControle() && emailControle() && adresseControle() && villeControle()) {
+        localStorage.setItem("formValue", JSON.stringify(formValue));
+        const commandeValide = `
+    <div class="commandeValide">
+    <p>Votre commande a été valider ! voir mon récapitulatif de commande <a class="lien_commande" href="commande.html"> ici !</a></p>
+    </div>
+    `;
+        const numeroCommandeCreate = `
+    <div class="commandeValide">
+    <p>Votre numéro de commande : ${numeroCommande.innerHTML}</p>
+    </div>
+    `;
+        affichagePanier.insertAdjacentHTML("afterend", numeroCommandeCreate);
+        affichagePanier.innerHTML = commandeValide;
+    } else {
+        alert("Votre panier est vide ou le formulaire n'est pas correcte");
+    }
 
     // Ajout des données du formulaire & produit dans ma const
     const envoiCommande = {
-        registerProductStorage,
-        formValue
+        localStorageContent,
+        formValue,
     }
-    console.log(envoiCommande);
 })
+let montantPanier = [];
+for (let m = 0; m < localStorageContent.length; m++) {
+    prixProduct = localStorageContent[m].price;
+    // quantityProduct = localStorageContent[m].quantity;
+    // montantPanier.push(quantityProduct)
+    montantPanier.push(prixProduct)
+        // console.log(montantPanier);
+}
+if (localStorageContent) {
+    const reducer = (accumulator, currentValue) => accumulator + currentValue;
+    const prixTotal = montantPanier.reduce(reducer, 0);
+    // console.log(prixTotal);
+    const affichagePrixPanier = `<p class="prixTotal">Prix total du panier : ${prixTotal}€</p>`
+    affichagePanier.insertAdjacentHTML("afterend", affichagePrixPanier);
+}
