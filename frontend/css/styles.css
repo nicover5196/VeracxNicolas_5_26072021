@@ -167,7 +167,7 @@
     }
     /* Commande valide */
     
-    .commandeValide {
+    .validationCommande {
         text-align: center;
         margin: auto;
         font-weight: bold;
@@ -198,4 +198,11 @@
     
     .prixTotal {
         text-align: center;
+    }
+    
+    .remerciement {
+        text-align: center;
+        font-size: 18px;
+        font-weight: bold;
+        color: green;
     }

@@ -168,23 +168,19 @@ btnFormulaire.addEventListener("click", (e) => {
         // Contrôle du champ nom
         const leNom = formValue.nom;
         if (regExPrenomNomVille(leNom)) {
-            // console.log("ok")
             return true;
         } else {
-            // console.log("ko")
             alert(textAlert("Nom"));
             return false;
         }
     }
-    // inversement du if & else, suppression des return
+
     function villeControle() {
         // Contrôle du champ ville
         const laVille = formValue.ville;
         if (regExPrenomNomVille(laVille)) {
-            // console.log("ok")
             return true;
         } else {
-            // console.log("ko")
             alert(textAlert("Ville"));
             return false;
         }
@@ -195,10 +191,8 @@ btnFormulaire.addEventListener("click", (e) => {
         // Contrôle du champ code postal
         const codePostal = formValue.codePostal;
         if (regExCodePostal(codePostal)) {
-            // console.log("ok")
             return true;
         } else {
-            // console.log("ko")
             alert("Veuillez remplir le code postal à 5 chiffres.");
             return false;
         }
@@ -208,10 +202,8 @@ btnFormulaire.addEventListener("click", (e) => {
         // Contrôle du champ email
         const leEmail = formValue.email;
         if (regExEmail(leEmail)) {
-            // console.log("ok")
             return true;
         } else {
-            // console.log("ko")
             alert("L'email n'est pas valide.");
             return false;
         }
@@ -226,48 +218,37 @@ btnFormulaire.addEventListener("click", (e) => {
             return false;
         }
     }
-    // récupérer les données formulaire & articles dans le panier
-    const numeroCommande = [];
-    numeroCommande.push(localStorageContent)
-    numeroCommande.push(localStorage)
-    console.log(numeroCommande);
-
-    const random = (max, min) => {
-        return Math.floor(Math.random() * (max - min + 1) + min);
-    }
-    numeroCommande.innerHTML = random(10000000, 90000000);
     // Contrôle validité formulaire avant envoie dans le LocalStorage
     if (localStorageContent && prenomControle() && nomControle() && codePostalControle() && emailControle() && adresseControle() && villeControle()) {
         localStorage.setItem("formValue", JSON.stringify(formValue));
         const commandeValide = `
-    <div class="commandeValide">
-    <p>Votre commande a été valider ! voir mon récapitulatif de commande <a class="lien_commande" href="commande.html"> ici !</a></p>
-    </div>
+    <p>Votre commande numéro : XXX a été validé ! Pour voir votre récapitulatif de commande cliquez <a class="lien_commande" href="commande.html">ici !</a></p>
     `;
-        const numeroCommandeCreate = `
-    <div class="commandeValide">
-    <p>Votre numéro de commande : ${numeroCommande.innerHTML}</p>
-    </div>
-    `;
-        affichagePanier.insertAdjacentHTML("afterend", numeroCommandeCreate);
-        affichagePanier.innerHTML = commandeValide;
+        document.querySelector(".validationCommande").innerHTML = commandeValide;
+        // localStorage.removeItem("panier");
+
     } else {
         alert("Votre panier est vide ou le formulaire n'est pas correcte");
     }
 
-    // Ajout des données du formulaire & produit dans ma const
-    const envoiCommande = {
-        localStorageContent,
-        formValue,
-    }
+    const envoieCommande = {
+            formValue,
+            localStorageContent,
+        }
+        // console.log(envoieCommande)
+    const promesse1 = fetch('http://localhost:3000/api/teddies/order', {
+        method: 'POST',
+        headers: {
+            'content-type': "application/json"
+        },
+    });
+    console.log(promesse1)
+    console.log("promesse1")
 })
 let montantPanier = [];
 for (let m = 0; m < localStorageContent.length; m++) {
-    prixProduct = localStorageContent[m].price;
-    // quantityProduct = localStorageContent[m].quantity;
-    // montantPanier.push(quantityProduct)
+    prixProduct = localStorageContent[m].price * localStorageContent[m].quantity;
     montantPanier.push(prixProduct)
-        // console.log(montantPanier);
 }
 if (localStorageContent) {
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
