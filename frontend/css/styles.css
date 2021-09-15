@@ -200,9 +200,12 @@
         text-align: center;
     }
     
-    .remerciement {
+    .recapitulatif {
         text-align: center;
-        font-size: 18px;
         font-weight: bold;
         color: green;
+    }
+    
+    .numeroCommande {
+        color: black;
     }

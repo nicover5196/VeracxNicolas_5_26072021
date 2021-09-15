@@ -4,6 +4,7 @@ const currentProductId = URLparams.get('id');
 const affichageArticle = document.querySelector(".product");
 
 
+
 const teddiesRoute = `http://localhost:3000/api/teddies/${currentProductId}`;
 
 

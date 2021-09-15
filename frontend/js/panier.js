@@ -39,7 +39,6 @@ if (localStorageContent === null) {
     // SI k est égale aux  nombre de données du pannier, alors afficher dans ma variable qui contient la classe html 
     if (k == localStorageContent.length) {
         affichagePanier.innerHTML = productPanier;
-        // console.log(registerProductStorage.length)
     }
 }
 // -----------------------------------------------------------
@@ -221,29 +220,56 @@ btnFormulaire.addEventListener("click", (e) => {
     // Contrôle validité formulaire avant envoie dans le LocalStorage
     if (localStorageContent && prenomControle() && nomControle() && codePostalControle() && emailControle() && adresseControle() && villeControle()) {
         localStorage.setItem("formValue", JSON.stringify(formValue));
-        const commandeValide = `
-    <p>Votre commande numéro : XXX a été validé ! Pour voir votre récapitulatif de commande cliquez <a class="lien_commande" href="commande.html">ici !</a></p>
-    `;
-        document.querySelector(".validationCommande").innerHTML = commandeValide;
-        // localStorage.removeItem("panier");
+        let contact = {
+            firstName: formValue.prenom,
+            lastName: formValue.nom,
+            address: formValue.adresse,
+            city: formValue.ville,
+            email: formValue.email,
+        }
+        for (m = 0; m < localStorageContent.length; m++) {
+            // console.log(m)
+            monId = localStorageContent[m].id;
+            // console.log(monId)
+        }
+        let products = []
+        products.push(monId)
+            // console.log(products)
+            // console.log(contact)
+        const promesse1 = fetch("http://localhost:3000/api/teddies/order", {
+            method: "POST",
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({ contact, products }),
 
+        });
+        promesse1.then(async(response) => {
+                try {
+                    console.log(response)
+                    const contenu = await response.json();
+                    console.log(contenu)
+                    if (response.ok) {
+                        console.log(`Resultat de response.ok : ${response.ok}`);
+
+                        // récupération id response serveur
+                        console.log(contenu.orderId)
+                            // envoie vers localstorage l'id response
+                        localStorage.setItem("order", contenu.orderId);
+                        // redirection page confirmation
+                        window.location = "commande.html";
+                    } else {
+                        alert(`Problème avec le serveur : ${response.status}`)
+                    }
+                } catch (e) {
+                    console.log(e);
+                    alert(`Erreur : ${e}`);
+                }
+            })
+            // localStorage.removeItem("panier");
     } else {
         alert("Votre panier est vide ou le formulaire n'est pas correcte");
     }
-
-    const envoieCommande = {
-            formValue,
-            localStorageContent,
-        }
-        // console.log(envoieCommande)
-    const promesse1 = fetch('http://localhost:3000/api/teddies/order', {
-        method: 'POST',
-        headers: {
-            'content-type': "application/json"
-        },
-    });
-    console.log(promesse1)
-    console.log("promesse1")
 })
 let montantPanier = [];
 for (let m = 0; m < localStorageContent.length; m++) {
@@ -256,4 +282,5 @@ if (localStorageContent) {
     // console.log(prixTotal);
     const affichagePrixPanier = `<p class="prixTotal">Prix total du panier : ${prixTotal}€</p>`
     affichagePanier.insertAdjacentHTML("afterend", affichagePrixPanier);
+    localStorage.setItem("prixTotal", JSON.stringify(prixTotal));
 }

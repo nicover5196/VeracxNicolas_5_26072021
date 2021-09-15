@@ -1,35 +1,34 @@
-// création d'une variable qui récupére les données de mon localstorage sur la key panier
-let localStorageContentCommande = JSON.parse(localStorage.getItem("formValue"));
-// Injection du code html dans la classe panier sur mon html
-const affichageForm = document.querySelector(".donneeForm");
+// Récupération de l'id Serveur
+const responseId = localStorage.getItem("order");
+// console.log(responseId)
 
-if (localStorageContentCommande) {
-    const commande = `<h3 class="cordonnee">Vos coordonnées :</h3>
-    <ul class="afficheCommande">
-    <li><strong>Prénom :</strong> ${localStorageContentCommande.prenom}</li></br>
-    <li><strong>Nom :</strong> ${localStorageContentCommande.nom}</li></br>
-    <li><strong>Email :</strong> ${localStorageContentCommande.email}</li></br>
-    <li><strong>Ville :</strong> ${localStorageContentCommande.ville}</li></br>
-    <li><strong>Adresse :</strong> ${localStorageContentCommande.adresse}</li></br>
-    <li><strong>Code postale :</strong> ${localStorageContentCommande.codePostal}</li></br>
-    </ul>
-    `
-    affichageForm.innerHTML = commande;
-}
-// let montantPanier = [];
-// for (let m = 0; m < localStorageContent.length; m++) {
-//     prixProduct = localStorageContent[m].price * localStorageContent[m].quantity;
-//     // quantityProduct = localStorageContent[m].quantity;
-//     // montantPanier.push(quantityProduct)
-//     montantPanier.push(prixProduct)
-//     console.log(prixProduct);
-// }
+// Récupération du prix total
+const prixTotal = localStorage.getItem("prixTotal");
+// console.log(prixTotal)
 
-// // (multiplication) + addition 
-// if (localStorageContent) {
-//     const reducer = (accumulator, currentValue) => accumulator + currentValue;
-//     const prixTotal = montantPanier.reduce(reducer, 0);
-//     console.log(prixTotal);
-//     const affichagePrixPanier = `<p class="prixTotal">Prix total du panier : ${prixTotal}€</p>`
-//     affichagePanier.insertAdjacentHTML("afterend", affichagePrixPanier);
-// }
+// Structure HTML de confirmation commande
+const positionStructure = document.querySelector(".recapitulatif");
+// console.log(positionStructure)
+
+const strusctureHtml = `
+<div>
+    <p>Merci pour vos achats !</p>
+    <p>Votre commande numéro : <span class="numeroCommande">${responseId}</span> a bien été prise en compte </p>
+    <p>Le montant de votre commande est de : <span class="numeroCommande" >${prixTotal} €</span>
+    <p>A bientôt chez Orinoco !</p>
+</div>
+`;
+
+// Injection HTML
+
+positionStructure.innerHTML = strusctureHtml;
+
+// Vider le localStorage sauf Form
+
+function removeKeyStorage(key) {
+    localStorage.removeItem(key);
+};
+
+removeKeyStorage("panier");
+removeKeyStorage("prixTotal");
+removeKeyStorage("order");
