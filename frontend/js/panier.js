@@ -1,10 +1,8 @@
 // création d'une variable qui récupére les données de mon localstorage sur la key panier
 let localStorageContent = JSON.parse(localStorage.getItem("panier"));
-// console.log(localStorageContent);
 
 // Injection du code html dans la classe panier sur mon html
 const affichagePanier = document.querySelector(".panier");
-// console.log(affichagePanier);
 
 
 // SI condition (localstorage) est vide alors afficher ma constante qui contient un msg dans ma variable qui contient ma classe panier
@@ -34,7 +32,6 @@ if (localStorageContent === null) {
         </article>
         </section>
         `;
-        // console.log(k)
     }
     // SI k est égale aux  nombre de données du pannier, alors afficher dans ma variable qui contient la classe html 
     if (k == localStorageContent.length) {
@@ -47,12 +44,8 @@ let removeProduct = document.querySelectorAll(".btn-delete");
 for (let j = 0; j < removeProduct.length; j++) {
     removeProduct[j].addEventListener("click", (event) => {
         event.preventDefault();
-        // console.log(event);
         let removeIdProduct = localStorageContent[j].id;
-        // console.log("id");
-        // console.log(removeIdProduct);
         localStorageContent = localStorageContent.filter(el => el.id !== removeIdProduct);
-        // console.log(registerProductStorage);
 
         localStorage.setItem(
             "panier", JSON.stringify(localStorageContent));
@@ -68,7 +61,6 @@ const resetPanier = `<div class="resetLePanier">
 affichagePanier.insertAdjacentHTML("beforebegin", resetPanier);
 
 const resetMyPanier = document.querySelector(".resetLocalPanier");
-// console.log(resetMyPanier);
 
 resetMyPanier.addEventListener('click', (event) => {
     event.preventDefault();
@@ -116,7 +108,6 @@ affichageFormulaire();
 
 // Selection du bouton qui envoie le formulaire
 const btnFormulaire = document.querySelector("#envoyerFormulaire");
-// console.log(btnFormulaire)
 
 // Ecouter le boutton au clic
 btnFormulaire.addEventListener("click", (e) => {
@@ -228,14 +219,10 @@ btnFormulaire.addEventListener("click", (e) => {
             email: formValue.email,
         }
         for (m = 0; m < localStorageContent.length; m++) {
-            // console.log(m)
             monId = localStorageContent[m].id;
-            // console.log(monId)
         }
         let products = []
         products.push(monId)
-            // console.log(products)
-            // console.log(contact)
         const promesse1 = fetch("http://localhost:3000/api/teddies/order", {
             method: "POST",
             headers: {
@@ -245,28 +232,27 @@ btnFormulaire.addEventListener("click", (e) => {
 
         });
         promesse1.then(async(response) => {
-                try {
-                    console.log(response)
-                    const contenu = await response.json();
-                    console.log(contenu)
-                    if (response.ok) {
-                        console.log(`Resultat de response.ok : ${response.ok}`);
+            try {
+                console.log(response)
+                const contenu = await response.json();
+                console.log(contenu)
+                if (response.ok) {
+                    console.log(`Resultat de response.ok : ${response.ok}`);
 
-                        // récupération id response serveur
-                        console.log(contenu.orderId)
-                            // envoie vers localstorage l'id response
-                        localStorage.setItem("order", contenu.orderId);
-                        // redirection page confirmation
-                        window.location = "commande.html";
-                    } else {
-                        alert(`Problème avec le serveur : ${response.status}`)
-                    }
-                } catch (e) {
-                    console.log(e);
-                    alert(`Erreur : ${e}`);
+                    // récupération id response serveur
+                    console.log(contenu.orderId)
+                        // envoie vers localstorage l'id response
+                    localStorage.setItem("order", contenu.orderId);
+                    // redirection page confirmation
+                    window.location = "commande.html";
+                } else {
+                    alert(`Problème avec le serveur : ${response.status}`)
                 }
-            })
-            // localStorage.removeItem("panier");
+            } catch (e) {
+                console.log(e);
+                alert(`Erreur : ${e}`);
+            }
+        })
     } else {
         alert("Votre panier est vide ou le formulaire n'est pas correcte");
     }
@@ -279,7 +265,6 @@ for (let m = 0; m < localStorageContent.length; m++) {
 if (localStorageContent) {
     const reducer = (accumulator, currentValue) => accumulator + currentValue;
     const prixTotal = montantPanier.reduce(reducer, 0);
-    // console.log(prixTotal);
     const affichagePrixPanier = `<p class="prixTotal">Prix total du panier : ${prixTotal}€</p>`
     affichagePanier.insertAdjacentHTML("afterend", affichagePrixPanier);
     localStorage.setItem("prixTotal", JSON.stringify(prixTotal));

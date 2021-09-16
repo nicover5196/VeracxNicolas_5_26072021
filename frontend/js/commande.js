@@ -1,14 +1,9 @@
 // Récupération de l'id Serveur
 const responseId = localStorage.getItem("order");
-// console.log(responseId)
-
 // Récupération du prix total
 const prixTotal = localStorage.getItem("prixTotal");
-// console.log(prixTotal)
-
 // Structure HTML de confirmation commande
 const positionStructure = document.querySelector(".recapitulatif");
-// console.log(positionStructure)
 
 const strusctureHtml = `
 <div>

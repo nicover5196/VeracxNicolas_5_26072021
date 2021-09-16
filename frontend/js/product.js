@@ -33,25 +33,21 @@ function displayProduct(product) {
 function addProduct(product) {
     const localStorageContent = JSON.parse(localStorage.getItem("panier"));
     if (localStorageContent === null) {
-        // alert('le localstorage est vide');
         let productsList = [];
         productsList.push(product);
         localStorage.setItem("panier", JSON.stringify(productsList));
     } else {
-        // alert('localstorage pas vide')
         //je fais une boucle autour des éléments de mon localStorageContent
         // si un de mes éléments a pour id l'id de mon produit
         // alors pour cet élément je lui incrémente sa quantité
         // et je mets à jour mon localStorage puis avec le return j'arrête ma boucle
         for (let i = 0; i < localStorageContent.length; i++) {
             if (localStorageContent[i].id === product.id) {
-                // alert('produit deja existant');
                 localStorageContent[i].quantity++;
                 localStorage.setItem("panier", JSON.stringify(localStorageContent));
                 return;
             }
         }
-        // alert("le produit n'est pas dans le local storage");
         localStorageContent.push(product);
         localStorage.setItem("panier", JSON.stringify(localStorageContent));
     }
